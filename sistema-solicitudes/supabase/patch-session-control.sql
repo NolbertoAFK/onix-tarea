@@ -235,8 +235,29 @@ begin
 end;
 $$;
 
+create or replace function public.force_start_browser_session(browser_token text)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if auth.uid() is null or browser_token is null or length(browser_token) < 16 then
+    return false;
+  end if;
+
+  update public.perfiles
+  set active_session_token = browser_token,
+      active_session_started_at = now()
+  where id = auth.uid();
+
+  return found;
+end;
+$$;
+
 grant execute on function public.start_browser_session(text) to authenticated;
 grant execute on function public.clear_browser_session(text) to authenticated;
+grant execute on function public.force_start_browser_session(text) to authenticated;
 
 create or replace function public.admin_update_profile(
   target_user_id uuid,

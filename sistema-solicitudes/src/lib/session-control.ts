@@ -11,14 +11,16 @@ const sessionCookieOptions = {
   maxAge: 60 * 60 * 24 * 7,
 };
 
-export async function startSingleBrowserSession(supabase: SupabaseClient) {
+export async function startSingleBrowserSession(
+  supabase: SupabaseClient,
+  options: { force?: boolean } = {},
+) {
   const cookieStore = await cookies();
   const browserToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   const token = browserToken || crypto.randomUUID();
 
-  const { data: allowed, error } = await supabase.rpc("start_browser_session", {
-    browser_token: token,
-  });
+  const rpcName = options.force ? "force_start_browser_session" : "start_browser_session";
+  const { data: allowed, error } = await supabase.rpc(rpcName, { browser_token: token });
 
   if (error || !allowed) {
     await supabase.auth.signOut();

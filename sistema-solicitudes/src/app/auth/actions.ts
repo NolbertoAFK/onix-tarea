@@ -28,7 +28,10 @@ export async function signInWithPassword(formData: FormData) {
     loginRedirect("No se pudo recuperar el usuario autenticado.");
   }
 
-  const session = await startSingleBrowserSession(supabase);
+  const forcePreviousSession = formData.get("force_previous_session") === "1";
+  const session = await startSingleBrowserSession(supabase, {
+    force: forcePreviousSession,
+  });
 
   if (!session.ok) {
     loginRedirect(session.message);

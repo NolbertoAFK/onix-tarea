@@ -14,6 +14,7 @@ type AuthPanelProps = {
 
 export function AuthPanel({ message }: AuthPanelProps) {
   const [mode, setMode] = useState<"login" | "register">("login");
+  const hasBlockedSession = message?.startsWith("Sesion bloqueada") ?? false;
 
   return (
     <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-5 sm:py-8">
@@ -106,6 +107,18 @@ export function AuthPanel({ message }: AuthPanelProps) {
                 {mode === "login" ? <LogIn aria-hidden="true" size={18} /> : <MailPlus aria-hidden="true" size={18} />}
                 {mode === "login" ? "Iniciar sesion" : "Registrar usuario"}
               </button>
+
+              {mode === "login" && hasBlockedSession ? (
+                <button
+                  type="submit"
+                  name="force_previous_session"
+                  value="1"
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-900 transition hover:bg-amber-100"
+                >
+                  <LogIn aria-hidden="true" size={18} />
+                  Cerrar sesion anterior e ingresar
+                </button>
+              ) : null}
             </form>
 
             <div className="my-5 h-px bg-border" />

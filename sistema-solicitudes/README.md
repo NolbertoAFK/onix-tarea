@@ -62,6 +62,7 @@ En `/dashboard`, cuando el usuario tiene rol `admin`, aparecen estos modulos:
 
 El sistema guarda un token por navegador en una cookie HTTP-only y lo compara con `perfiles.active_session_token`.
 Si una misma cuenta intenta ingresar desde otro navegador mientras existe una sesion activa, el login se bloquea y muestra una alerta.
+Cuando esa sesion quedo abierta por error, el login muestra el boton `Cerrar sesion anterior e ingresar`, que reemplaza el token anterior despues de validar correo y contrasena.
 
 Para liberar sesiones activas durante pruebas:
 
