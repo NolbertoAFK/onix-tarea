@@ -46,6 +46,8 @@ Funciones administrativas:
 - `admin_update_profile()`: actualiza nombre y rol, evitando eliminar el ultimo admin.
 - `admin_clear_user_session()`: libera la sesion activa de un usuario.
 
+El primer administrador se crea con el script `supabase/create-admin.sql`; luego ese admin puede gestionar los roles desde la tabla del panel.
+
 Campos clave para sesion unica:
 
 ```sql

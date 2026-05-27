@@ -348,7 +348,8 @@ function ProfileManager({
             <tr className="text-xs uppercase tracking-[0.08em] text-neutral-500">
               <th className="border-b border-border px-3 py-3">Usuario</th>
               <th className="border-b border-border px-3 py-3">Nombre</th>
-              <th className="border-b border-border px-3 py-3">Rol</th>
+              <th className="border-b border-border px-3 py-3">Rol actual</th>
+              <th className="border-b border-border px-3 py-3">Nuevo rol</th>
               <th className="border-b border-border px-3 py-3">Sesion</th>
               <th className="border-b border-border px-3 py-3">Acciones</th>
             </tr>
@@ -365,15 +366,19 @@ function ProfileManager({
                   </p>
                 </td>
                 <td className="border-b border-border px-3 py-4">
-                  <ProfileForm profile={profile} roles={roles} compact />
+                  <ProfileNameInput profile={profile} />
                 </td>
                 <td className="border-b border-border px-3 py-4">
                   <RoleBadge role={profile.rol_nombre} />
                 </td>
                 <td className="border-b border-border px-3 py-4">
-                  <SessionBadge profile={profile} />
+                  <ProfileRoleSelect profile={profile} roles={roles} />
                 </td>
                 <td className="border-b border-border px-3 py-4">
+                  <SessionBadge profile={profile} />
+                </td>
+                <td className="space-y-2 border-b border-border px-3 py-4">
+                  <SaveProfileButton profile={profile} />
                   <ClearSessionForm profile={profile} />
                 </td>
               </tr>
@@ -417,14 +422,12 @@ function ProfileCard({
 function ProfileForm({
   profile,
   roles,
-  compact = false,
 }: {
   profile: AdminProfile;
   roles: Array<{ id: number; nombre: RoleName }>;
-  compact?: boolean;
 }) {
   return (
-    <form action={updateUserProfile} className={compact ? "flex min-w-[360px] gap-2" : "space-y-3"}>
+    <form action={updateUserProfile} className="space-y-3">
       <input type="hidden" name="id" value={profile.id} />
       <input
         required
@@ -448,7 +451,57 @@ function ProfileForm({
         className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark"
       >
         <Save aria-hidden="true" size={16} />
-        {compact ? "" : "Guardar"}
+        Guardar
+      </button>
+    </form>
+  );
+}
+
+function ProfileNameInput({ profile }: { profile: AdminProfile }) {
+  return (
+    <input
+      required
+      form={`profile-form-${profile.id}`}
+      name="nombre"
+      defaultValue={profile.nombre}
+      className="min-h-10 w-full min-w-[180px] rounded-md border border-border bg-white px-3 py-2 text-sm outline-none ring-primary/20 transition focus:border-primary focus:ring-4"
+    />
+  );
+}
+
+function ProfileRoleSelect({
+  profile,
+  roles,
+}: {
+  profile: AdminProfile;
+  roles: Array<{ id: number; nombre: RoleName }>;
+}) {
+  return (
+    <select
+      form={`profile-form-${profile.id}`}
+      name="rol_id"
+      defaultValue={profile.rol_id}
+      className="min-h-10 w-full min-w-[140px] rounded-md border border-border bg-white px-3 py-2 text-sm outline-none ring-primary/20 transition focus:border-primary focus:ring-4"
+    >
+      {roles.map((role) => (
+        <option key={role.id} value={role.id}>
+          {role.nombre === "admin" ? "Admin" : "Usuario"}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function SaveProfileButton({ profile }: { profile: AdminProfile }) {
+  return (
+    <form id={`profile-form-${profile.id}`} action={updateUserProfile}>
+      <input type="hidden" name="id" value={profile.id} />
+      <button
+        title="Guardar nombre y rol"
+        className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark"
+      >
+        <Save aria-hidden="true" size={16} />
+        Guardar
       </button>
     </form>
   );
@@ -461,7 +514,7 @@ function ClearSessionForm({ profile }: { profile: AdminProfile }) {
       <button
         disabled={!profile.has_active_session}
         title="Liberar sesion activa"
-        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-border bg-white px-3 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-surface-muted disabled:hover:bg-white"
+        className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md border border-border bg-white px-3 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-surface-muted disabled:hover:bg-white"
       >
         <KeyRound aria-hidden="true" size={16} />
         Liberar

@@ -30,6 +30,8 @@ set rol_id = 1
 where id = (select id from auth.users where email = 'admin@correo.com');
 ```
 
+Tambien puedes usar el archivo `supabase/create-admin.sql` y cambiar el correo.
+
 ## Desarrollo
 
 ```bash
@@ -49,7 +51,7 @@ Abre `http://localhost:3000`.
 En `/dashboard`, cuando el usuario tiene rol `admin`, aparecen estos modulos:
 
 - Gestion de perfiles y roles: lista todos los usuarios registrados, muestra su correo, nombre, rol y estado de sesion.
-- Cambio de rol: permite convertir un perfil entre `admin` y `usuario`. La base evita que se elimine el ultimo admin.
+- Cambio de rol: muestra el rol actual en una tabla y permite convertir un perfil entre `admin` y `usuario`. La base evita que se elimine el ultimo admin.
 - Control de sesion: permite liberar la sesion activa de un usuario para que pueda ingresar de nuevo desde otro navegador.
 - Solicitudes recibidas: permite aprobar o rechazar vacaciones con comentario opcional.
 
