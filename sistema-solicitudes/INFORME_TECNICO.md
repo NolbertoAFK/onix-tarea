@@ -37,6 +37,7 @@ Tablas principales:
 
 - `roles`: define `admin` y `usuario`.
 - `perfiles`: relaciona usuarios de `auth.users` con nombre, rol y token de sesion activa.
+- `usuario_roles`: tabla editable que muestra `admin` o `usuario` directamente y sincroniza cambios con `perfiles.rol_id`.
 - `vacaciones`: almacena solicitudes de vacaciones, estado, comentario y responsable de autorizacion.
 - `vacaciones_detalle`: vista segura para mostrar solicitudes con nombre de usuario.
 
@@ -47,6 +48,7 @@ Funciones administrativas:
 - `admin_clear_user_session()`: libera la sesion activa de un usuario.
 
 El primer administrador se crea con el script `supabase/create-admin.sql`; luego ese admin puede gestionar los roles desde la tabla del panel.
+Tambien existe el parche `supabase/patch-usuario-roles.sql` para crear la tabla editable `usuario_roles` en bases ya desplegadas.
 
 Campos clave para sesion unica:
 

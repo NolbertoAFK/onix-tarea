@@ -9,6 +9,11 @@ where id = (
   where email = 'admin@correo.com'
 );
 
+-- Si ya ejecutaste `patch-usuario-roles.sql`, tambien puedes hacerlo asi:
+-- update public.usuario_roles
+-- set rol = 'admin'
+-- where email = 'admin@correo.com';
+
 -- Verifica que el usuario quedo como admin.
 select
   p.id,
