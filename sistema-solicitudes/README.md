@@ -14,6 +14,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
 
 3. Ejecuta `supabase/schema.sql` en el SQL Editor de Supabase.
    Si ya tenias la base creada antes de agregar control de sesion unica, ejecuta tambien `supabase/patch-session-control.sql`.
+   Si tu base ya existe y quieres agregar la tabla separada para registros por formulario, ejecuta `supabase/patch-usuarios-formulario.sql`.
 4. En Supabase Auth habilita Email y Google.
 5. En Google OAuth agrega el callback de Supabase que muestra el panel del provider.
 6. En Supabase Auth > URL Configuration agrega:
@@ -33,6 +34,8 @@ where id = (select id from auth.users where email = 'admin@correo.com');
 Tambien puedes usar el archivo `supabase/create-admin.sql` y cambiar el correo.
 
 Si quieres verlo y editarlo directamente en Supabase, ejecuta `supabase/patch-usuario-roles.sql`. Eso crea la tabla `usuario_roles`, donde el campo `rol` muestra `admin` o `usuario` y se puede editar.
+
+Para diferenciar los registros normales de los registros con Google, el esquema tambien crea `usuarios_formulario`. Esa tabla se llena automaticamente solo con usuarios creados por email/contrasena en el formulario; los usuarios de Google se mantienen en `auth.users`, `perfiles` y `usuario_roles`.
 
 ## Desarrollo
 
@@ -55,6 +58,7 @@ En `/dashboard`, cuando el usuario tiene rol `admin`, aparecen estos modulos:
 - Gestion de perfiles y roles: lista todos los usuarios registrados, muestra su correo, nombre, rol y estado de sesion.
 - Cambio de rol: muestra el rol actual en una tabla y permite convertir un perfil entre `admin` y `usuario`. La base evita que se elimine el ultimo admin.
 - Tabla editable en Supabase: `usuario_roles` permite ver y cambiar el rol con texto claro (`admin` o `usuario`).
+- Tabla de registros por formulario: `usuarios_formulario` guarda email y nombre de quienes se registran con correo/contrasena, sin mezclar usuarios de Google.
 - Control de sesion: permite liberar la sesion activa de un usuario para que pueda ingresar de nuevo desde otro navegador.
 - Solicitudes recibidas: permite aprobar o rechazar vacaciones con comentario opcional.
 
